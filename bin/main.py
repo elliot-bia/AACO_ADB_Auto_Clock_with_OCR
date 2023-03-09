@@ -77,31 +77,47 @@ def phone_admin(User):
     # 进行步骤操作
     log_factory.DEBUGGER.info(f"开始{Device_Name}打卡步骤")
     need_ctrl_phone = PhoneCtrl.PhoneAdbCtrl(User)
-    # 先亮屏，再确定打卡APP类型
-    try:
-        need_ctrl_phone.open_phone()
+     # 先亮屏，再确定打卡APP类型
+    need_ctrl_phone.open_phone()
+    Close_APP_Retry = config.getint('Config', 'Close_APP_Retry')
+    for Close_APP_Retry_Times in range(1, Close_APP_Retry + 2):
         if config['Config']['Punch_APP'] == "wework":
             need_ctrl_phone.open_wecom()
+        try:
+            step_num = config.getint('Steps', 'TotolSteps')
+            for i in range(1,step_num+1):
+                Step_Section = 'Step'+str(i)
+                if config[Step_Section]['Step_Type'] == 'TEXT':
+                    Input = config[Step_Section]['Step_Input']
+                    Output = config[Step_Section]['Step_Output']
+                    need_ctrl_phone.click_and_check_txt(Input,Output,Step_Section)
+                elif config[Step_Section]['Step_Type'] == 'IMAGE':
+                    IMG_Input = config[Step_Section]['Step_Input']
+                    Output = config[Step_Section]['Step_Output']
+                    need_ctrl_phone.click_and_check_img(IMG_Input, Output, Step_Section)
+                    pass
+                elif config[Step_Section]['Step_Type'] == 'FINISH':
+                    Input = config[Step_Section]['Step_Input']
+                    need_ctrl_phone.final_tap_check(Input, Step_Section)
+                    pass
+            break
+        except Exception as e:
+            log_factory.DEBUGGER.error(f"{Device_Name}设备打卡出错，报错为{e}")
+            log_factory.DEBUGGER.error(f"{Device_Name}设备打卡出错，进行关闭APP重试，重试次数为{Close_APP_Retry_Times+1}")
 
-        step_num = config.getint('Steps', 'TotolSteps')
-        for i in range(1,step_num+1):
-            Step_Section = 'Step'+str(i)
-            if config[Step_Section]['Step_Type'] == 'TEXT':
-                Input = config[Step_Section]['Step_Input']
-                Output = config[Step_Section]['Step_Output']
-                need_ctrl_phone.click_and_check_txt(Input,Output,Step_Section)
-            elif config[Step_Section]['Step_Type'] == 'IMAGE':
-                IMG_Input = config[Step_Section]['Step_Input']
-                Output = config[Step_Section]['Step_Output']
-                need_ctrl_phone.click_and_check_img(IMG_Input, Output, Step_Section)
-                pass
-            elif config[Step_Section]['Step_Type'] == 'FINISH':
-                Input = config[Step_Section]['Step_Input']
-                need_ctrl_phone.final_tap_check(Input, Step_Section)
-                pass
-            pass
-    except Exception as e:
-        log_factory.DEBUGGER.error(f"{Device_Name}设备打卡出错，报错为{e}")
+        if Close_APP_Retry_Times == Close_APP_Retry+1:
+            log_factory.DEBUGGER.error(f"{Device_Name}设备打卡出错，进行短信提醒")
+            # 进行短信通知逻辑判断
+            if config[User]['SMS_Phone'] != "":
+                sms_notify.sms_monitor_send(phone_numbers=SMS_Phone, template_param='{"content":"%s"}' % (
+                    f"{Device_Name}设备重试连接失败！进行短信通知！请进行手动打卡！"))
+                if config['Config']['Admin_Phone_Num'] != "":
+                    if config['Config']['Admin_Phone_Num'] != config[User]['SMS_Phone']:
+                        sms_notify.sms_monitor_send(phone_numbers=config['Config']['Admin_Phone_Num'], template_param='{"content":"%s"}' % (
+                        f"{Device_Name}设备重试连接失败！进行短信通知！请通知他人进行手动打卡！"))
+                log_factory.DEBUGGER.error(f"{Device_Name}设备重试连接失败！进行短信通知！请进行手动打卡！")
+            else:
+                log_factory.DEBUGGER.error(f"{Device_Name}设备重试连接失败！进行短信通知！请进行手动打卡！")
 
 
 def main():

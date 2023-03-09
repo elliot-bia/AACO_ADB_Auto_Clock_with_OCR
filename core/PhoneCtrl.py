@@ -243,7 +243,7 @@ class PhoneAdbCtrl():
         """
         self.photo_name=Step_Section
         log_factory.DEBUGGER.info(f"设备{self.name}开始打卡步骤{Step_Section},类型为『TXT』，打卡关键字为{Input}，打卡成功关键字为{Output}")
-        for i in range(1,self.config.getint('Config','Downslide_Retry')+1):
+        for i in range(1,self.config.getint('Config','Downslide_Retry')+2): # range是用1，2，3不使用
             # 进行截图并返回路径
             self.screenshot_path = self.screenshot()
             click_axios = self.text_identify(Input, self.screenshot_path)
@@ -267,7 +267,7 @@ class PhoneAdbCtrl():
         self.photo_name=Step_Section
         log_factory.DEBUGGER.info(f"设备{self.name}开始打卡步骤{Step_Section},类型为『IMAGE』，打卡关键图像为{IMG_Input}，打卡成功关键字为{Output}")
 
-        for i in range(1,self.config.getint('Config','Downslide_Retry')+1):
+        for i in range(1,self.config.getint('Config','Downslide_Retry')+2):
             return_postion = self.retrun_img_match_position(target= sys.path[-1] + IMG_Input)
             if return_postion == None:
                 log_factory.DEBUGGER.warning(f"设备{self.name}进行图片匹配未发现，尝试下滑{i}次")
@@ -282,6 +282,7 @@ class PhoneAdbCtrl():
             if i == self.config.getint('Config','Downslide_Retry')+1:
                 # 尝试最后都没匹配到，抛出识别错误
                 raise Exception(f"{self.name}设备打卡步骤{Step_Section}识别Input{IMG_Input}和Output{Output}失败，进行下滑次数{i}次均失败!")
+
 
     def open_wecom(self):
         # self.phone.shell("am start com.tencent.mm/com.tencent.mm.ui.LauncherUI")
