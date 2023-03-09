@@ -65,7 +65,7 @@ May you share freely, never taking more than you give.
 给个流程图演示一下  
 <img src="./img/img_4.png" width="15%" height="15%" alt="img_4.png"/>
 
-就是这么简单。其中涉及到一些出错重试、手机性能羸弱导致超时等待、多处文字干扰等一些功能，详见最后[其他说明]()  
+就是这么简单。其中涉及到一些出错重试、手机性能羸弱导致超时等待、多处文字干扰等一些功能，详见最后[其他说明](https://github.com/elliot-bia/AACO_ADB_Auto_Clock_with_OCR/wiki)  
 我们就关注于：__找到需要某个点击的文字（图标）__ --> __确认点击成功的结果__  
 我们来举个企业微信打卡例子：
 1. 打开企业微信 -->  出现<消息>界面 
