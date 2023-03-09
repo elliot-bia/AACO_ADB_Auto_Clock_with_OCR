@@ -256,7 +256,6 @@ class PhoneAdbCtrl():
                 log_factory.DEBUGGER.warning(f"{self.name}设备打卡步骤{Step_Section}识别Input{Input}和Output{Output}失败，进行下滑，次数{i}次!")
                 self.phone.input_swipe(540, 1300, 540, 500, 100)
                 # 没有找到就继续咯
-                continue
             if i == self.config.getint('Config','Downslide_Retry')+1:
                 # 尝试最后都没匹配到，抛出识别错误
                 raise Exception(f"{self.name}设备打卡步骤{Step_Section}识别Input{Input}和Output{Output}失败，进行下滑次数{i}次均失败!")
@@ -272,7 +271,6 @@ class PhoneAdbCtrl():
             if return_postion == None:
                 log_factory.DEBUGGER.warning(f"设备{self.name}进行图片匹配未发现，尝试下滑{i}次")
                 self.phone.input_swipe(540, 1300, 540, 500, 100)
-                continue
             else:
                 x = return_postion['result'][0]
                 y = return_postion['result'][1]
