@@ -107,7 +107,7 @@ Step_Output = 班打卡
 # 这里就需要点击图片了
 Step_Type = IMAGE
 # 这里使用图片的相对路径
-Step_Input = ./src_img/buoy.png
+Step_Input = /src_img/buoy.png
 Step_Output = 确定
 
 [Step4]
