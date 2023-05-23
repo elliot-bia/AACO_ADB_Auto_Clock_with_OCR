@@ -1,0 +1,9 @@
+conf/config.ini
+screenshot/*
+!screenshot/.gitkeep
+log/*
+!log/.gitkeep
+.DS_Store
+.idea/
+test/
+.vscode/

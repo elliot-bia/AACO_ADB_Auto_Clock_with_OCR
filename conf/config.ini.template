@@ -1,0 +1,80 @@
+[Config]
+# 多进程池数
+pool = 4
+# 打卡前进行时间内的随机等待，0为不等待，单位min
+sleep_time = 0
+SMS_Type = AliyunSMS
+# 所有的短信通知都会发一份给admin_phone_num，如果是同一个就不发，为空也不发
+Admin_Phone_Num =
+# 使用企业微信打卡，剩余的app待补充
+Punch_APP = wework
+# ocr超时次数
+OCR_Timeout_Retry = 5
+# 无法识别时，尝试往下滑动次数
+Downslide_Retry = 1
+# 打卡识别失败后，关掉APP重试的次数
+Close_APP_Retry = 2
+
+
+[AliyunSMS]
+# 阿里云的短信通知API
+Access_Key_ID =
+Access_Key_Secret =
+sign_name =
+template_code =
+
+[Steps]
+# 一共需要4步的点击和判断
+TotolSteps = 2
+
+[Step1]
+# 选择识别的类型（文字/图片/完成）
+Step_Type = TEXT
+# 需要点击的文字A
+Step_Input = 工作台
+# 需要确认点击是否成功的文字B（下同）
+Step_Output = 考勤打卡
+
+[Step2]
+Step_Type = TEXT
+Step_Input = 考勤打卡
+Step_Output = 班打卡
+
+[Step3]
+# 这里就需要点击图片了
+Step_Type = IMAGE
+# 这里使用图片的相对路径
+Step_Input = /src_img/buoy.png
+Step_Output = 确定
+
+[Step4]
+# 最后一步识别，不做点击成功判断
+Step_Type = FINISH
+Step_Input = 确定
+
+
+[Users]
+User_list = User2,User3,User4
+
+[User1]
+Connect_Type = Wifi
+IP_Address = 192.168.13.141
+Port = 5555
+Device_Name = w的手机
+# 需要进行短信通知的手机号，留空为不通知
+SMS_Phone =
+
+[User2]
+Connect_Type = Wifi
+IP_Address = 192.168.13.161
+Port = 5565
+Device_Name = y的手机
+# 需要进行短信通知的手机号，留空为不通知
+SMS_Phone =
+
+[User3]
+Connect_Type = USB
+Series_Strings = xxxxx
+Device_Name = Rami的小米手机9
+# 需要进行短信通知的手机号，留空为不通知
+SMS_Phone =
